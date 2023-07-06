@@ -131,6 +131,7 @@ async function run() {
     //   Check out
     app.post("/checkout", async (req, res) => {
       const order = req.body;
+      order.status = "paid";
       // get cart id and delete from cart
       const cartId = order._id;
       const query = { _id: new ObjectId(cartId) };
@@ -141,9 +142,9 @@ async function run() {
     });
 
     //   Get orders
-    app.get("/orders", verifyJWT, async (req, res) => {
+    app.get("/orders/:email", verifyJWT, async (req, res) => {
       const email = req.decoded.email;
-      const userEmail = req.query.email;
+      const userEmail = req.params.email;
       if (email !== userEmail) {
         return res
           .status(401)
