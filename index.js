@@ -58,6 +58,20 @@ async function run() {
       res.send({ token });
     });
 
+    //   Add User to database
+    app.post("/adduser", async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const existingUser = await usersCollection.findOne(query);
+
+      if (existingUser) {
+        return res.send({ message: "user already exists" });
+      }
+
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
+
     //   Get products from database
     app.get("/products", async (req, res) => {
       const page = parseInt(req.query.page) || 1;
