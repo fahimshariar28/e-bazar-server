@@ -8,7 +8,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_ID}:${process.env.DB_PASS}@cluster0.9vgoxb6.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -40,6 +40,14 @@ async function run() {
     app.get("/totalProducts", async (req, res) => {
       const totalProducts = await productsCollection.countDocuments({});
       res.send({ totalProducts });
+    });
+
+    //   Get Single Product by Id
+    app.get("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await productsCollection.findOne(query);
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
