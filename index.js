@@ -46,7 +46,9 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
+    const usersCollection = client.db("e-bazar-db").collection("users");
     const productsCollection = client.db("e-bazar-db").collection("products");
+    const cartCollection = client.db("e-bazar-db").collection("cart");
 
     //   JWT Post
     app.post("/jwt", (req, res) => {
@@ -93,6 +95,13 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await productsCollection.findOne(query);
+      res.send(result);
+    });
+
+    //   Add to cart
+    app.post("/addtocart", async (req, res) => {
+      const cart = req.body;
+      const result = await cartCollection.insertOne(cart);
       res.send(result);
     });
 
