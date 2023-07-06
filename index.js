@@ -49,6 +49,7 @@ async function run() {
     const usersCollection = client.db("e-bazar-db").collection("users");
     const productsCollection = client.db("e-bazar-db").collection("products");
     const cartCollection = client.db("e-bazar-db").collection("cart");
+    const ordersCollection = client.db("e-bazar-db").collection("orders");
 
     //   JWT Post
     app.post("/jwt", (req, res) => {
@@ -124,6 +125,18 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await cartCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    //   Check out
+    app.post("/checkout", async (req, res) => {
+      const order = req.body;
+      // get cart id and delete from cart
+      const cartId = order._id;
+      const query = { _id: new ObjectId(cartId) };
+      const deleteResult = await cartCollection.deleteOne(query);
+      // add order to database
+      const result = await ordersCollection.insertOne(order);
       res.send(result);
     });
 
