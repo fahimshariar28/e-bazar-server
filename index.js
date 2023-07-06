@@ -24,6 +24,18 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
+    const productsCollection = client.db("e-bazar-db").collection("products");
+    //   Get products from database
+    app.get("/products", async (req, res) => {
+      console.log(req.query);
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const skip = (page - 1) * limit;
+      const cursor = productsCollection.find({}).skip(skip).limit(limit);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
