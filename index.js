@@ -151,7 +151,8 @@ async function run() {
           .send({ error: true, message: "unauthorized access" });
       }
       const query = { email: userEmail };
-      const result = await ordersCollection.find(query).toArray();
+      const sort = { orderTime: -1 };
+      const result = await ordersCollection.find(query).sort(sort).toArray();
       res.send(result);
     });
 
