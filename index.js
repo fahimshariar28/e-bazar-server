@@ -107,7 +107,6 @@ async function run() {
 
     //   Get cart
     app.get("/cart", verifyJWT, async (req, res) => {
-      console.log(req);
       const email = req.decoded.email;
       const userEmail = req.query.email;
       if (email !== userEmail) {
@@ -117,6 +116,14 @@ async function run() {
       }
       const query = { email: userEmail };
       const result = await cartCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    //   Delete from cart
+    app.delete("/cart/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await cartCollection.deleteOne(query);
       res.send(result);
     });
 
