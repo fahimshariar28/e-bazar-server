@@ -140,6 +140,20 @@ async function run() {
       res.send(result);
     });
 
+    //   Get orders
+    app.get("/orders", verifyJWT, async (req, res) => {
+      const email = req.decoded.email;
+      const userEmail = req.query.email;
+      if (email !== userEmail) {
+        return res
+          .status(401)
+          .send({ error: true, message: "unauthorized access" });
+      }
+      const query = { email: userEmail };
+      const result = await ordersCollection.find(query).toArray();
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
