@@ -156,6 +156,14 @@ async function run() {
       res.send(result);
     });
 
+    // Admin Routes
+    // Get all orders
+    app.get("/allorders", async (req, res) => {
+      const sort = { orderTime: -1 };
+      const result = await ordersCollection.find({}).sort(sort).toArray();
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
