@@ -164,6 +164,15 @@ async function run() {
       res.send(result);
     });
 
+    // Update order status
+    app.patch("/updateorder/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const update = { $set: { status: "delivered" } };
+      const result = await ordersCollection.updateOne(query, update);
+      res.send(result);
+    });
+
     // Get all customers
     app.get("/customers", async (req, res) => {
       const query = { role: "customer" };
